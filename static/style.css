@@ -9,3 +9,32 @@
     font-family:Microsoft Yahei !important;
     serif !important;
 }
+.result-size{
+    font-size:13 px !important;
+    font-family:Microsoft Yahei !important;
+    serif !important;
+}
+
+.img-preview {
+    width: 256px;
+    height: 256px;
+    border: 5px solid darkblue;;
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+}
+
+.img-preview>div {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+}
+
+
+input[type="file"] {
+    display: none;
+}
+
+
+
+
