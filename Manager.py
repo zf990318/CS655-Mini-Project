@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from collections import defaultdict
 from threading import Lock
 import requests
-import time
+from gevent.pywsgi import WSGIServer
 import os
 
 mutex = Lock()
@@ -22,7 +22,7 @@ class Manager:
         if not os.path.exists(self.img_folder):
             os.makedirs(self.img_folder)
 
-    def processJob(self, filename, jb_id):
+    def process_request(self, filename, jb_id):
 
         img = {'image': open('images/' + filename, 'rb')}
 
@@ -30,68 +30,55 @@ class Manager:
             # If there is no worker node return 400 bad request
             if len(self.workers) == 0 and len(self.ip_list) == 0:
                 print("No active worker node now")
-                return "Service Error: No Worker Node!", 400
+                return "No Worker Node Active!", 400
 
             else:
-                ip, wk_id = self.assignJob()
+                ip, wk_id = self.assign_job()
                 print("Assigning Job " + str(jb_id) + " to Worker Node " + str(wk_id))
 
-                if self.checkAlive(wk_id):
-                    print(f"Successfuly Assigned Job: {jb_id} to Worker:{wk_id}")
-                    try:
-                        r = requests.post(ip + "/predict", files=img)
-                    except:
-                        # worker failed during processing, reassign job
-                        print(f"Worker {wk_id} Connect Failed, Re-Assign Job {jb_id}")
-                        self.removeworker(wk_id)
-                        continue
-
-                    self.ava_worker.append(wk_id)
-                    return r.json()['result']
+                if self.check(wk_id):
+                    print("Job " + str(jb_id) + " has assigned to worker node " + str(wk_id))
+                    request = requests.post(ip + "/", files=img)
+                    self.workers.append(wk_id)
+                    return request.json()['result']
                 else:
-                    print(f"Failed to Assigned Job {jb_id} to Worker {wk_id}")
+                    print("Job " + str(jb_id) + " has failed to assign to worker node"+ str(wk_id))
+                    return
 
-    def assignJob(self):
+    #get ip address and worker node id for new job
+    def assign_job(self):
         worker_id = self.workers[0]
         ip = self.ip_list[worker_id]
         del self.workers[0]
         return ip, worker_id
 
-    def checkAlive(self, wk_id):
+    #check node connection
+    def check(self, wk_id):
         try:
             result = requests.get(self.workers[wk_id] + "/status")
         except:
-            print(f"Worker {wk_id} Connect Failed")
-            self.removeworker(wk_id)
+            print("Worker node " + str(wk_id) + " failed to connect")
+            del self.workers[wk_id]
             return False
-        if (result.status_code == 200):
-            return True
+        if (result.status_code != 200):
+            del self.workers[wk_id]
+            return False
         else:
-            self.removeworker(wk_id)
-            return False
+            return True
 
-    def addworker(self, url):
+    def add_new(self, url):
         with mutex:
             wid = self.worker_id
-            time.sleep(0.001)
             self.worker_id += 1
             self.ip_list[wid] = url
             self.workers.append(wid)
-
-        print(f"Added Worker {wid} address: {url}")
-
         return True
-
-    def removeworker(self, wid):
-        del self.workers[wid]
-        print(f"Removed Worker {wid}")
 
     def newjob(self):
         with mutex:
-            jid = self.job_id
-            time.sleep(0.001)
+            jb_id = self.job_id
             self.job_id += 1
-            return jid
+            return jb_id
 
 
 # web servers
@@ -105,21 +92,16 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/predict', methods=['POST'])
-def upload():
-    # get job id
+@app.route('/', methods=['POST'])
+def predict():
+    # get new job id
     jobid = manager.newjob()
-    # get file
+    # get image file
     img = request.files['file']
-    # save the file
     newfilename = secure_filename("job-" + str(jobid) + "-" + img.filename)
     img_path = os.path.join(manager.img_folder, newfilename)
     img.save(img_path)
-    print(f"Saving File... id: {jobid}")
-
-    r = manager.processJob(newfilename, jobid)
-    # print(f"Predict Result: {r.json()['result']}")
-    print(f"Job {jobid} Finished")
+    r = manager.process_request(newfilename, jobid)
 
     return r
 
@@ -127,14 +109,14 @@ def upload():
 @app.route('/addnode', methods=['POST'])
 def addnode():
     ip = request.remote_addr
-    # print(request.form['port'])
     port = request.form['port']
     url = "http://" + ip + ":" + port
-    if (manager.addworker(url)):
+    if manager.add_new(url):
         return jsonify({'message': "Worker Added Successfully"})
     else:
         return jsonify({'message': "Worker Added Failed"}), 400
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port="80")
+    http_server = WSGIServer(('127.0.0.1', 8080), app)
+    http_server.serve_forever()
