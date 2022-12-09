@@ -3,9 +3,16 @@
 
 #### 3.1.1 Set up GENI
 
-​	We only need to nodes for this project. One of them is for HTML file. We use Nginx to start a html server. Another one is server which will provide a machine learning service. The script to download Rspec files is wget https://raw.githubusercontent.com/zf990318/CS655-Mini-Project/master/rspec.txt
+​	We only need two nodes for this project. One of them is for HTML file. We use Nginx to start a html server. Another one is server which will provide a machine learning service. The script to download Rspec files is wget https://raw.githubusercontent.com/zf990318/CS655-Mini-Project/master/rspec.txt
 . When I started this project, I forgot to choose Publicly Routable Ip for the nodes which resulted in I can't visit the nodes even the service was started successfully.Make sure you choose the "Publicly Routable IP" option
 
+SSH to web interface node using:
+
+ssh -i ~/.ssh/id_geni_ssh_rsa yiyinghu@pcvm3-28.instageni.research.umich.edu -p 22
+
+SSH to ML-server node using:
+
+ssh -i ~/.ssh/id_geni_ssh_rsa yiyinghu@pcvm3-29.instageni.research.umich.edu -p 22
 
 
 #### 3.1.2 Set up HTML-Server
@@ -93,3 +100,4 @@ Run server
 ```
 python3 ML-Server.py
 '''
+The server will running at 
