@@ -39,7 +39,7 @@ systemctl status nginx
 ● nginx.service - A high performance web server and a reverse proxy server
 ```
 
-Type in the ip of your node in browser, ip of my http-server is 192.41.233.48![Screen Shot 2022-12-08 at 14.38.24](/Users/huyiying/Library/Application Support/typora-user-images/Screen Shot 2022-12-08 at 14.38.24.png)
+Type in the ip of your node in browser, ip of my http-server is 192.41.233.48
 
 Nginx works succesfully if you see this page
 
