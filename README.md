@@ -100,4 +100,4 @@ Run server
 ```
 python3 ML-Server.py
 '''
-The server will running at 
+The server will running at 192.41.233.48:5000
