@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Recognition Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="./static/style.css">
+</head>
+<body>
+
+<nav class="ui inverted attached segment">
+    <div class="ui container">
+
+        <center><h1 class="ui teal header ">CS 655 Mini Project: Image Recognition Application</h1></center>
+
+    </div>
+
+</nav>
+<center><h1 class="tittle1-size">Group Member</h1></center>
+<center><p class="content-size">Zifeng Chen: zf990318@bu.edu</p></center>
+<center><p class="content-size">Yiying Hu: yiyinghu@bu.edu</p></center>
+
+<div class="container">
+    <center><b class="title1-size" >Introduction</b></center>
+    <br>
+    <center><p class="content-size">In this project we implement a VGG16 neural network with pre-trained weight  image-recognition application which has a web interface</p></center>
+    <center><p class="content-size">Where a user  able to submit an image query and the recognition application will return a tag for image after the neural network classify the image</p></center>
+    <br>
+    <center><p class="content-size">To start the image recognition service, please choose your image and upload it at below</p></center>
+    <br>
+</div>
+<br>
+<div>
+    <center><img id="img1" style="width: 200px" height="200px"></center>
+</div>
+<div>
+    <form id="form" method="post" enctype="multipart/form-data">
+        <center><input id="btn" type="file" value="uploaded" name="file" accept=".png, .jpg, .jpeg"> <br></center>
+    </form>
+</div>
+
+<center><div id="result" class="result-size">
+    <p></p>
+</div></center>
+
+<center><div id="size" class="result-size">
+    <p></p>
+</div></center>
+<center><div id="time" class="result-size">
+    <p></p>
+</div></center>
+<!-- 引入axios库 -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const btn = document.getElementById('btn')
+    btn.onchange = async () => {
+        var start = new Date().getTime();
+        var reads= new FileReader();
+        f=document.getElementById('btn').files[0];
+        console.log(f.size);
+        reads.readAsDataURL(f);
+        reads.onload=function (e) {
+            document.getElementById('img1').src=this.result;
+        };
+
+        //send post request to specific port
+        const formData = new FormData()
+        formData.append('image', btn.files[0])
+        const res = await axios.post('http://127.0.0.1:5000/result', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        console.log(res)
+        console.log(res.data)
+        var end = new Date().getTime();
+        //set the predict result
+        document.getElementById('result').innerHTML = res.data
+        // set round trip time
+        document.getElementById('time').innerHTML = "Round Trip Time " + (end - start) + "ms"
+        //set throughput
+        document.getElementById('size').innerHTML = "Throughput: " + f.size
+
+
+    }
+</script>
+<style>
+    img {
+        width: 100px;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"></script>
+</body>
+</html>
