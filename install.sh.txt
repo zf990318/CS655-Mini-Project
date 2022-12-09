@@ -1,0 +1,7 @@
+pip install flask
+pip install requests
+pip install numpy
+pip install torchvision
+pip install flask_cors
+pip install torch.nn
+pip install werkzeug.utils
