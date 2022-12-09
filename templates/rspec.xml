@@ -1,0 +1,46 @@
+<rspec xmlns="http://www.geni.net/resources/rspec/3" xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" xmlns:tour="http://www.protogeni.net/resources/rspec/ext/apt-tour/1" xmlns:jacks="http://www.protogeni.net/resources/rspec/ext/jacks/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geni.net/resources/rspec/3    http://www.geni.net/resources/rspec/3/request.xsd" type="request">
+    <node xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" client_id="ML-Server" component_manager_id="urn:publicid:IDN+instageni.research.umich.edu+authority+cm" component_id="urn:publicid:IDN+instageni.research.umich.edu+node+pc3" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89766" exclusive="false">
+        <icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+        <routable_control_ip xmlns="http://www.protogeni.net/resources/rspec/ext/emulab/1"/>
+        <sliver_type name="default-vm"/>
+        <services>
+            <login authentication="ssh-keys" hostname="pcvm3-29.instageni.research.umich.edu" port="22" username="yiyinghu"/>
+            <login authentication="ssh-keys" hostname="pcvm3-29.instageni.research.umich.edu" port="22" username="ctony"/>
+            <login authentication="ssh-keys" hostname="pcvm3-29.instageni.research.umich.edu" port="22" username="lei"/>
+            <login authentication="ssh-keys" hostname="pcvm3-29.instageni.research.umich.edu" port="22" username="matta"/>
+            <emulab:console server="pcvm3-29.instageni.research.umich.edu"/>
+            <emulab:imageable available="true"/>
+        </services>
+        <interface client_id="interface-0" component_id="urn:publicid:IDN+instageni.research.umich.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89769" mac_address="0204c7c0339b">
+            <ip address="10.10.1.1" netmask="255.255.255.0" type="ipv4"/>
+        </interface>
+        <emulab:vnode name="pcvm3-29" hardware_type="pcvm" disk_image="emulab-ops/UBUNTU18-64-STD:0"/>
+        <host name="ML-Server.miniyiyinghu.ch-geni-net.instageni.research.umich.edu" ipv4="192.41.233.47"/>
+    </node>
+    <node xmlns:emulab="http://www.protogeni.net/resources/rspec/ext/emulab/1" client_id="HTML-Server" component_manager_id="urn:publicid:IDN+instageni.research.umich.edu+authority+cm" component_id="urn:publicid:IDN+instageni.research.umich.edu+node+pc3" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89765" exclusive="false">
+        <icon xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" url="https://portal.geni.net/images/VM-noTxt-centered.svg"/>
+        <routable_control_ip xmlns="http://www.protogeni.net/resources/rspec/ext/emulab/1"/>
+        <sliver_type name="default-vm"/>
+        <services>
+            <login authentication="ssh-keys" hostname="pcvm3-28.instageni.research.umich.edu" port="22" username="yiyinghu"/>
+            <login authentication="ssh-keys" hostname="pcvm3-28.instageni.research.umich.edu" port="22" username="ctony"/>
+            <login authentication="ssh-keys" hostname="pcvm3-28.instageni.research.umich.edu" port="22" username="lei"/>
+            <login authentication="ssh-keys" hostname="pcvm3-28.instageni.research.umich.edu" port="22" username="matta"/>
+            <emulab:console server="pcvm3-28.instageni.research.umich.edu"/>
+            <emulab:imageable available="true"/>
+        </services>
+        <interface client_id="interface-1" component_id="urn:publicid:IDN+instageni.research.umich.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89770" mac_address="02e57090d9ef">
+            <ip address="10.10.1.2" netmask="255.255.255.0" type="ipv4"/>
+        </interface>
+        <emulab:vnode name="pcvm3-28" hardware_type="pcvm" disk_image="emulab-ops/UBUNTU18-64-STD:0"/>
+        <host name="HTML-Server.miniyiyinghu.ch-geni-net.instageni.research.umich.edu" ipv4="192.41.233.48"/>
+    </node>
+    <link client_id="link-0" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89768">
+        <interface_ref client_id="interface-0" component_id="urn:publicid:IDN+instageni.research.umich.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89769"/>
+        <interface_ref client_id="interface-1" component_id="urn:publicid:IDN+instageni.research.umich.edu+interface+pc3:lo0" sliver_id="urn:publicid:IDN+instageni.research.umich.edu+sliver+89770"/>
+        <component_manager name="urn:publicid:IDN+instageni.research.umich.edu+authority+cm"/>
+    </link>
+    <rs:site_info xmlns:rs="http://www.protogeni.net/resources/rspec/ext/site-info/1">
+        <rs:location country="" latitude="42.29062" longitude="-83.71365"/>
+    </rs:site_info>
+</rspec>
